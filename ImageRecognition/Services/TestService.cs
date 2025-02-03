@@ -1,5 +1,4 @@
-﻿using ImageRecognition.Controllers;
-using ImageRecognition.Models;
+﻿using ImageRecognition.Models.Test;
 using ImageRecognition.Services.Interfaces;
 using System;
 

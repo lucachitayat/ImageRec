@@ -1,4 +1,4 @@
-﻿using ImageRecognition.Models;
+﻿using ImageRecognition.Models.Test;
 
 namespace ImageRecognition.Services.Interfaces
 {

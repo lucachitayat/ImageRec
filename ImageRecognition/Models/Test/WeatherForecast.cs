@@ -1,4 +1,4 @@
-namespace ImageRecognition.Models
+namespace ImageRecognition.Models.Test
 {
     public class WeatherForecast
     {

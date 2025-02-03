@@ -1,4 +1,4 @@
-using ImageRecognition.Models;
+using ImageRecognition.Models.Test;
 using ImageRecognition.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
