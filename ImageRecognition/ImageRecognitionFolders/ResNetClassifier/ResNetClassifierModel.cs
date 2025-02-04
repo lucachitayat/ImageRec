@@ -24,7 +24,7 @@ namespace ImageRecognition.ImageRecognitionFolders.ResNetClassifier
             //{ "resnet50", () => torchvision.models.resnet50(pretrained: true) },
             //{ "resnet101", () => torchvision.models.resnet101(pretrained: true) },
             //{ "resnet152", () => torchvision.models.resnet152(pretrained: true) }
-            { "resnet50", () => torchvision.models.resnet50( weights_file: "\\HDNX\\Projects\\ai-recognition-net8\\ImageRecognition\\ImageRecognitionFolders\\Weights\\resnet50_default_weights.dat" ) }
+            { "resnet50", () => torchvision.models.resnet50( weights_file: "ImageRecognition/ImageRecognitionFolders/Weights/resnet50_default_weights.dat" ) }
         };
 
             if (!resnetModels.ContainsKey(modelType))

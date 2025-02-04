@@ -1,9 +1,9 @@
-﻿using static TorchSharp.torch.optim.lr_scheduler;
-using static TorchSharp.torch.optim;
-using TorchSharp.Modules;
+﻿using ImageRecognition.ImageRecognitionFolders.ResNetClassifier;
 using TorchSharp;
+using TorchSharp.Modules;
 using static TorchSharp.torch.nn;
-using ImageRecognition.ImageRecognitionFolders.ResNetClassifier;
+using static TorchSharp.torch.optim;
+using static TorchSharp.torch.optim.lr_scheduler;
 
 namespace ImageRecognition.ImageRecognitionFolders
 {
