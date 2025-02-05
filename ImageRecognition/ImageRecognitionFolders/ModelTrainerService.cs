@@ -164,6 +164,7 @@ namespace ImageRecognition.ImageRecognitionFolders
 
             // Load best model weights
             model.load_state_dict(bestModelState);
+
             return model;
         }
 

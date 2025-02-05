@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using SkiaSharp; // For image processing (alternative to PIL in Python)
 using TorchSharp;
 using static TorchSharp.torch;
-using static TorchSharp.torchvision.transforms;
-using SkiaSharp; // For image processing (alternative to PIL in Python)
-using static TorchSharp.torchvision;
 using static TorchSharp.torch.distributions.transforms;
 using static TorchSharp.torch.utils.data;
+using static TorchSharp.torchvision;
+using static TorchSharp.torchvision.transforms;
 
 namespace ImageRecognition.ImageRecognitionFolders
 {
@@ -18,7 +15,9 @@ namespace ImageRecognition.ImageRecognitionFolders
         private readonly ITransform _imageOnlyTransform;
         private readonly ITransform _maskTransform;
 
-        public TransparentImageDataset(string root, Transform transform = null)
+        public TransparentImageDataset(string root
+            //, Transform transform = null
+            )
         {
             _root = root;
 
@@ -28,7 +27,8 @@ namespace ImageRecognition.ImageRecognitionFolders
             _imageOnlyTransform = Compose(new ITransform[]
             {
                 ColorJitter(brightness: 0.2f, contrast: 0.2f, saturation: 0.2f),
-                Normalize(new[] { 0.485d, 0.456d, 0.406d }, new[] { 0.229d, 0.224d, 0.225d })
+                //Normalize(means: new[] { 0.485d, 0.456d, 0.406d }, stdevs: new[] { 0.229d, 0.224d, 0.225d })
+                //Needs resizing?
             });
 
             // Define mask transformations
@@ -43,6 +43,7 @@ namespace ImageRecognition.ImageRecognitionFolders
         public override Dictionary<string, Tensor> GetTensor(long index)
         {
             var (path, label) = _samples[(int)index];
+            //incorrectly reading 18 and should it be the UUID of the folder
 
             // Load image and mask
             using var image = SKBitmap.Decode(path);
@@ -68,12 +69,17 @@ namespace ImageRecognition.ImageRecognitionFolders
             // Apply mask transformations
             maskTensor = _maskTransform.call(maskTensor);
 
-            return new Dictionary<string, Tensor>
+            // Convert label to tensor
+            var labelTensor = torch.tensor(new long[] { label });
+
+            var response = new Dictionary<string, Tensor>
             {
                 { "image", imageTensor },
-                { "label", tensor(label) },
+                { "label", labelTensor },
                 { "mask", maskTensor }
             };
+
+            return response;
         }
 
         private static Tensor ToTensor(SKBitmap image)
@@ -132,6 +138,8 @@ namespace ImageRecognition.ImageRecognitionFolders
                 {
                     var alpha = image.GetPixel(x, y).Alpha;
                     mask.SetPixel(x, y, alpha > 0 ? SKColors.White : SKColors.Black);
+
+                    // maybe these colors should be reversed. White should represent 255 and Black should represent 0.
                 }
             }
             return mask;
@@ -166,12 +174,12 @@ namespace ImageRecognition.ImageRecognitionFolders
             }
 
             // Random crop
-            if (random.NextDouble() > 0.0)
-            {
-                var (i, j, h, w) = GetRandomCropParams(image, 112, 112);
-                image = Crop(image, i, j, h, w);
-                mask = Crop(mask, i, j, h, w);
-            }
+            //if (random.NextDouble() > 0.0)
+            //{
+            //    var (i, j, h, w) = GetRandomCropParams(image, 112, 112);
+            //    image = Crop(image, i, j, h, w);
+            //    mask = Crop(mask, i, j, h, w);
+            //}
 
             return (image, mask);
         }
@@ -224,6 +232,13 @@ namespace ImageRecognition.ImageRecognitionFolders
                 canvas.DrawBitmap(bitmap, new SKRect(j, i, j + w, i + h), new SKRect(0, 0, w, h));
             }
             return cropped;
+        }
+
+        public class GetTensorResponse
+        {
+            public Tensor Image { get; set; }
+            public Tensor Label { get; set; }
+            public Tensor Mask { get; set; }
         }
     }
 }

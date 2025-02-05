@@ -1,3 +1,4 @@
+using ImageRecognition.ImageRecognitionFolders;
 using ImageRecognition.Services;
 using ImageRecognition.Services.Interfaces;
 
@@ -13,6 +14,9 @@ builder.Services.AddSwaggerGen();
 // Register application services for dependency injection
 builder.Services.AddScoped<IStartupService, StartupService>();
 builder.Services.AddScoped<ITestService, TestService>();
+builder.Services.AddScoped<IRecognitionService, RecognitionService>();
+
+//builder.Services.AddSingleton<TransparentImageDataset>();
 
 var app = builder.Build();
 
